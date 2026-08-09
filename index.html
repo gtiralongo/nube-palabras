@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#09090b">
+  <title>nube de palabras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <div class="bg">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+    <div id="stars"></div>
+  </div>
+  <div class="vignette"></div>
+
+  <div class="header-tag">
+    <span class="dot"></span>
+    <span>nube de palabras</span>
+  </div>
+
+  <canvas id="wordCloud"></canvas>
+
+  <div id="info-card">
+    <span class="info-label">concepto</span>
+    <span class="word-label" id="selected-word">-</span>
+    <span class="badge" id="selected-level">nivel 0</span>
+    <span class="badge badge-desc" id="selected-desc"></span>
+  </div>
+
+  <div class="hint" id="hint">pasa el mouse sobre una palabra · clic abre · doble clic edita · clic derecho borra</div>
+
+  <button class="density-chip" id="densityChip" type="button">ver todas</button>
+
+  <div class="hotspot" id="hotspot" title="nueva palabra">+</div>
+
+  <div class="form-mask" id="formMask">
+    <div class="form" id="form">
+      <button class="form__close" id="formClose" type="button" aria-label="cerrar">&times;</button>
+      <h2 class="form__title" id="formTitle">nueva palabra</h2>
+      <input type="text" id="wordInput" class="form__input" placeholder="escribe la palabra…" maxlength="28" autocomplete="off">
+      <div class="form__row">
+        <span class="form__label">nivel</span>
+        <div class="level-dots" id="levelDots"></div>
+        <button class="btn-dice" id="diceBtn" type="button" title="nivel aleatorio">&#127922;</button>
+        <label class="auto-random"><input type="checkbox" id="autoRandom"> auto</label>
+        <span class="level-num" id="levelNum"></span>
+      </div>
+      <textarea id="descInput" class="form__desc" rows="2" placeholder="descripción (opcional)…"></textarea>
+      <button class="form__add" id="addBtn" type="button">agregar a la nube</button>
+      <div class="form__hint">enter para agregar · esc para salir</div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="modalMask">
+    <div class="modal-card" id="modalCard">
+      <div class="modal-face modal-face--front">
+        <div class="modal-word" id="modalWord"></div>
+        <div class="modal-level">
+          <div class="modal-dots" id="modalDots"></div>
+          <span id="modalLevel"></span>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-flip" id="modalFlip" type="button">leer descripción</button>
+          <button class="modal-edit" id="modalEdit" type="button">editar</button>
+          <button class="modal-del" id="modalDel" type="button">borrar</button>
+        </div>
+      </div>
+      <div class="modal-face modal-face--back">
+        <div class="modal-desc" id="modalDesc"></div>
+        <button class="modal-flip" id="modalFlipBack" type="button">volver</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js?v=4"></script>
+</body>
+</html>
