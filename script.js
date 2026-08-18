@@ -30,7 +30,6 @@ let words = [];
 let idSeq = 1;
 let levelSel = 3;
 let editingId = null;
-let modalWord = null;
 
 let width = 0;
 let height = 0;
@@ -39,6 +38,7 @@ let isMobile = false;
 
 const pointer = { x: -1000, y: -1000, radius: POINTER_RADIUS, isActive: false };
 let activeWord = null;
+let selectedWord = null;
 
 let mqMobile = window.matchMedia('(max-width: 640px)');
 let densityExpanded = false;
@@ -59,12 +59,12 @@ function randomLevel() {
 }
 
 function weightOf(level) {
-  return clamp(level, 1, 5) * 2;
+  return clamp(level, 1, 5);
 }
 
 function fontSizeFor(weight) {
-  const base = isMobile ? Math.min(width * 0.03, 12) : Math.min(width * 0.016, 15);
-  const scale = isMobile ? 2.0 : 3.2;
+  const base = isMobile ? Math.min(width * 0.036, 16) : Math.min(width * 0.025, 22);
+  const scale = isMobile ? 2.8 : 3.8;
   return base + weight * scale;
 }
 
@@ -113,8 +113,8 @@ function resolveCollisions() {
       const a = words[i];
       const b = words[j];
       if (a.hidden || b.hidden) continue;
-      const w = (a.width + b.width) / 2 + 6;
-      const h = (a.height + b.height) / 2 + 4;
+      const w = (a.width + b.width) / 2 + 12;
+      const h = (a.height + b.height) / 2 + 8;
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const nx = Math.abs(dx);
@@ -138,21 +138,31 @@ let centerX = 0;
 let centerY = 0;
 
 function ringRadius(level) {
-  const maxR = Math.min(width, height) * 0.38;
-  const minR = Math.max(34, maxR * 0.16);
+  const maxR = isMobile
+    ? Math.min(width, height) * 0.34
+    : Math.min(width, height) * 0.24;
+  const minR = isMobile ? Math.max(30, maxR * 0.22) : Math.max(40, maxR * 0.25);
   const step = (maxR - minR) / 4;
   return minR + (5 - clamp(level, 1, 5)) * step;
 }
 
-function ringSpeedFor(level) {
-  return 0.05 + (5 - clamp(level, 1, 5)) * 0.012;
+function randomRing() {
+  return Math.floor(Math.random() * 5) + 1;
+}
+
+function ringSpeedFor(ring) {
+  const base = isMobile ? 0.06 : 0.035;
+  const inc = isMobile ? 0.010 : 0.007;
+  return base + (5 - clamp(ring, 1, 5)) * inc;
 }
 
 function ringTarget(w) {
-  const R = ringRadius(w.level);
+  const R = ringRadius(w.ring);
+  const xRatio = isMobile ? 0.55 : 0.6;
+  const yRatio = isMobile ? 1.1 : 1.05;
   return {
-    x: centerX + R * Math.cos(w.ringAngle),
-    y: centerY + R * Math.sin(w.ringAngle) * 0.65
+    x: centerX + R * Math.cos(w.ringAngle) * xRatio,
+    y: centerY + R * Math.sin(w.ringAngle) * yRatio
   };
 }
 
@@ -163,23 +173,27 @@ function initWords() {
 
   words.forEach((w) => { w.hidden = true; });
 
-  const byLevel = {};
   for (const w of sorted) {
-    (byLevel[w.level] = byLevel[w.level] || []).push(w);
+    w.hidden = false;
+    w.weight = weightOf(w.level);
+    w.targetFontSize = fontSizeFor(w.weight);
+    if (w.ring === undefined) w.ring = randomRing();
+    w.ringSpeed = ringSpeedFor(w.ring);
+    if (w.ringAngle === undefined) {
+      w.ringAngle = Math.random() * Math.PI * 2;
+    }
   }
 
-  for (let lv = 1; lv <= 5; lv++) {
-    const group = byLevel[lv] || [];
+  const byRing = {};
+  for (const w of sorted) {
+    if (w.hidden) continue;
+    (byRing[w.ring] = byRing[w.ring] || []).push(w);
+  }
+  for (const ring in byRing) {
+    const group = byRing[ring];
     group.forEach((w, index) => {
-      w.hidden = false;
-      if (w.baseLevel === undefined) w.baseLevel = lv;
-      w.weight = weightOf(w.baseLevel);
-      w.targetFontSize = fontSizeFor(w.weight);
-      w.ringSpeed = ringSpeedFor(w.level);
-      if (w.ringAngle === undefined) {
-        w.ringAngle = (index / Math.max(1, group.length)) * Math.PI * 2
-          + (Math.random() - 0.5) * 0.4;
-      }
+      w.ringAngle = (index / Math.max(1, group.length)) * Math.PI * 2
+        + (Math.random() - 0.5) * 0.3;
       const t = ringTarget(w);
       if (!isFinite(t.x) || !isFinite(t.y)) {
         t.x = centerX;
@@ -193,7 +207,7 @@ function initWords() {
         w.vx = (Math.random() - 0.5) * 0.2;
         w.vy = (Math.random() - 0.5) * 0.2;
         w.angle = Math.random() * Math.PI * 2;
-        w.speed = 0.006 + Math.random() * 0.008;
+        w.speed = 0.010 + Math.random() * 0.012;
       }
       w.hoverScale = 1;
       w.width = 0;
@@ -204,7 +218,7 @@ function initWords() {
     });
   }
 
-  for (let k = 0; k < 25; k++) {
+  for (let k = 0; k < 40; k++) {
     words.forEach(measure);
     resolveCollisions();
   }
@@ -236,13 +250,15 @@ function updateWord(w, dt) {
   }
 
   w.angle += w.speed;
-  w.x += w.vx + Math.sin(w.angle) * 0.15;
-  w.y += w.vy + Math.cos(w.angle) * 0.15;
+  const osc = isMobile ? 0.10 : 0.06;
+  const anchor = isMobile ? 0.018 : 0.025;
+  w.x += w.vx + Math.sin(w.angle) * osc;
+  w.y += w.vy + Math.cos(w.angle) * osc;
 
-  w.x += (w.originX - w.x) * 0.008;
-  w.y += (w.originY - w.y) * 0.008;
+  w.x += (w.originX - w.x) * anchor;
+  w.y += (w.originY - w.y) * anchor;
 
-  const margin = 50;
+  const margin = isMobile ? 35 : 50;
   w.x = clamp(w.x, margin, width - margin);
   w.y = clamp(w.y, margin, height - margin);
 
@@ -273,35 +289,52 @@ function drawWord(w) {
   ctx.textBaseline = 'middle';
 
   const isHovered = activeWord === w;
-  if (isHovered) {
-    ctx.fillStyle = 'rgba(255,255,255,1)';
-    ctx.shadowColor = 'rgba(255,255,255,0.45)';
-    ctx.shadowBlur = 18;
-  } else {
-    ctx.fillStyle = `rgba(228,228,231,${opacityFor(w.weight).toFixed(3)})`;
-    ctx.shadowBlur = 0;
-  }
+  const isSelected = selectedWord === w;
+
+  ctx.shadowBlur = isHovered ? 20 : 8;
+  ctx.shadowColor = isHovered
+    ? 'rgba(255,255,255,0.5)'
+    : 'rgba(150,170,255,0.18)';
+
+  ctx.strokeStyle = isSelected
+    ? 'rgba(150,200,255,0.35)'
+    : 'rgba(0,0,0,0.3)';
+  ctx.lineWidth = isSelected ? 2.5 : 2;
+  ctx.lineJoin = 'round';
+  ctx.strokeText(w.word, w.x, w.y);
+
+  ctx.fillStyle = isHovered
+    ? 'rgba(255,255,255,1)'
+    : isSelected
+      ? 'rgba(220,235,255,1)'
+      : `rgba(228,228,231,${opacityFor(w.weight).toFixed(3)})`;
   ctx.fillText(w.word, w.x, w.y);
   ctx.shadowBlur = 0;
 }
 
-let lastCardId = null;
-function updateInfoCard() {
-  const card = $('info-card');
-  if (activeWord) {
-    if (lastCardId !== activeWord.id) {
-      lastCardId = activeWord.id;
-      $('selected-word').textContent = activeWord.word;
-      $('selected-level').textContent = 'nivel ' + activeWord.level;
-      const d = activeWord.desc.trim();
-      $('selected-desc').textContent = d ? d : 'sin descripción';
-      $('selected-desc').style.display = d ? 'inline' : 'none';
-    }
-    card.classList.add('show');
-  } else {
-    lastCardId = null;
-    card.classList.remove('show');
+function selectWord(w) {
+  selectedWord = w;
+  const panel = $('info-panel');
+  $('infoWord').textContent = w.word;
+  const d = w.desc.trim();
+  $('infoDesc').textContent = d || '';
+  panel.classList.add('show');
+}
+
+function deselectWord() {
+  selectedWord = null;
+  $('info-panel').classList.remove('show');
+}
+
+function updateInfoPanel() {
+  if (!selectedWord) return;
+  if (selectedWord.hidden) {
+    deselectWord();
+    return;
   }
+  $('infoWord').textContent = selectedWord.word;
+  const d = selectedWord.desc.trim();
+  $('infoDesc').textContent = d || '';
 }
 
 /* ---------- loop ---------- */
@@ -325,14 +358,14 @@ function loop(t) {
     if (w.hidden) continue;
     updateWord(w, dt);
   }
-  for (let k = 0; k < 2; k++) {
+  for (let k = 0; k < 4; k++) {
     words.forEach(measure);
     resolveCollisions();
   }
   for (const w of words) {
     if (!w.hidden) drawWord(w);
   }
-  updateInfoCard();
+  updateInfoPanel();
 
   requestAnimationFrame(loop);
 }
@@ -363,7 +396,8 @@ function setWordLevel(w, level) {
   const lv = clamp(Math.round(level), 1, 5);
   if (lv === w.level) return false;
   w.level = lv;
-  w.ringSpeed = ringSpeedFor(lv);
+  w.weight = weightOf(lv);
+  w.targetFontSize = fontSizeFor(w.weight);
   return true;
 }
 
@@ -394,9 +428,7 @@ function hitTest(x, y) {
 
 let downPos = { x: 0, y: 0 };
 let didMove = false;
-let holdTimer = null;
-let lastTap = 0;
-let tapTimer = null;
+let lastClick = 0;
 
 function onPointerDown(e) {
   downPos = { x: e.clientX, y: e.clientY };
@@ -404,13 +436,6 @@ function onPointerDown(e) {
   pointer.x = e.clientX;
   pointer.y = e.clientY;
   pointer.isActive = true;
-  if (e.pointerType === 'touch') {
-    const w = hitTest(e.clientX, e.clientY);
-    clearTimeout(holdTimer);
-    holdTimer = setTimeout(() => {
-      if (w) openForm(w);
-    }, 500);
-  }
 }
 
 function onPointerMove(e) {
@@ -419,7 +444,6 @@ function onPointerMove(e) {
     const dy = e.clientY - downPos.y;
     if (Math.abs(dx) + Math.abs(dy) > 10) {
       didMove = true;
-      clearTimeout(holdTimer);
     }
   }
   pointer.x = e.clientX;
@@ -428,21 +452,21 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
-  clearTimeout(holdTimer);
   if (didMove) return;
   const w = hitTest(e.clientX, e.clientY);
   const now = performance.now();
-  if (now - lastTap < 300) {
-    lastTap = 0;
-    clearTimeout(tapTimer);
-    if (w) openForm(w);
+  if (now - lastClick < 300 && w) {
+    lastClick = 0;
+    deselectWord();
+    openForm(w);
     return;
   }
-  lastTap = now;
-  clearTimeout(tapTimer);
-  tapTimer = setTimeout(() => {
-    if (w) openModal(w);
-  }, 260);
+  lastClick = now;
+  if (w) {
+    selectWord(w);
+  } else {
+    deselectWord();
+  }
 }
 
 function onPointerLeave() {
@@ -452,49 +476,23 @@ function onPointerLeave() {
   activeWord = null;
 }
 
-function onContextMenu(e) {
-  e.preventDefault();
-  if (e.button === 2) {
-    const w = hitTest(e.clientX, e.clientY);
-    if (w) removeWord(w);
-  }
-}
-
 canvas.addEventListener('pointerdown', onPointerDown);
 canvas.addEventListener('pointermove', onPointerMove);
 canvas.addEventListener('pointerup', onPointerUp);
 canvas.addEventListener('pointerleave', onPointerLeave);
-canvas.addEventListener('contextmenu', onContextMenu);
 
 /* ---------- CRUD ---------- */
 
-function openModal(w) {
-  modalWord = w;
-  $('modalWord').textContent = w.word;
-  $('modalLevel').textContent = 'nivel ' + w.level;
-  $('modalDesc').textContent = w.desc.trim() || 'sin descripción';
-  const dots = $('modalDots');
-  dots.innerHTML = '';
-  for (let i = 1; i <= 5; i++) {
-    const d = document.createElement('i');
-    if (i <= w.level) d.classList.add('on');
-    dots.appendChild(d);
-  }
-  $('modalCard').classList.remove('flipped');
-  $('modalMask').classList.add('open');
-}
-
-function closeModal() {
-  $('modalMask').classList.remove('open');
-}
-
 function openForm(word) {
+  deselectWord();
   editingId = word ? word.id : null;
   $('formTitle').textContent = word ? 'editar palabra' : 'nueva palabra';
   $('wordInput').value = word ? word.word : '';
   $('descInput').value = word ? word.desc : '';
   levelSel = word ? word.level : levelSel;
   $('autoRandom').checked = false;
+  $('formDelete').style.display = word ? 'block' : 'none';
+  $('addBtn').textContent = word ? 'guardar cambios' : 'agregar a la nube';
   paintDots();
   $('formMask').classList.add('open');
   setTimeout(() => $('wordInput').focus(), 140);
@@ -502,6 +500,7 @@ function openForm(word) {
 
 function closeForm() {
   $('formMask').classList.remove('open');
+  $('addBtn').textContent = 'agregar a la nube';
   editingId = null;
 }
 
@@ -630,22 +629,21 @@ $('descInput').addEventListener('keydown', (e) => {
 $('addBtn').addEventListener('click', submitWord);
 $('diceBtn').addEventListener('click', () => setLevel(randomLevel()));
 
-$('modalMask').addEventListener('click', (e) => {
-  if (e.target === $('modalMask')) closeModal();
-});
-$('modalFlip').addEventListener('click', () => $('modalCard').classList.add('flipped'));
-$('modalFlipBack').addEventListener('click', () => $('modalCard').classList.remove('flipped'));
-$('modalEdit').addEventListener('click', () => {
-  if (modalWord) {
-    closeModal();
-    openForm(modalWord);
+$('infoEdit').addEventListener('click', () => {
+  if (selectedWord) {
+    const w = selectedWord;
+    deselectWord();
+    openForm(w);
   }
 });
-$('modalDel').addEventListener('click', () => {
-  if (modalWord) {
-    const w = modalWord;
-    closeModal();
-    removeWord(w);
+
+$('formDelete').addEventListener('click', () => {
+  if (editingId) {
+    const w = words.find((x) => x.id === editingId);
+    if (w) {
+      closeForm();
+      removeWord(w);
+    }
   }
 });
 
@@ -658,10 +656,11 @@ window.addEventListener('resize', debounce(resize, 200));
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    if ($('modalMask').classList.contains('open')) closeModal();
-    else if ($('formMask').classList.contains('open')) {
+    if ($('formMask').classList.contains('open')) {
       $('hotspot').classList.remove('open');
       closeForm();
+    } else {
+      deselectWord();
     }
   }
 });

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#09090b">
-  <title>nube de palabras</title>
+  <title>nube de Benjamín</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,14 +27,15 @@
 
   <canvas id="wordCloud"></canvas>
 
-  <div id="info-card">
-    <span class="info-label">concepto</span>
-    <span class="word-label" id="selected-word">-</span>
-    <span class="badge" id="selected-level">nivel 0</span>
-    <span class="badge badge-desc" id="selected-desc"></span>
+  <div class="info-panel" id="info-panel">
+    <div class="info-panel__word" id="infoWord"></div>
+    <div class="info-panel__desc" id="infoDesc"></div>
+    <div class="info-panel__actions">
+      <button class="info-panel__btn info-panel__btn--edit" id="infoEdit" type="button">editar</button>
+    </div>
   </div>
 
-  <div class="hint" id="hint">pasa el mouse sobre una palabra · clic abre · doble clic edita · clic derecho borra</div>
+  <div class="hint" id="hint">pasa el mouse sobre una palabra · clic selecciona · doble clic edita</div>
 
   <button class="density-chip" id="densityChip" type="button">ver todas</button>
 
@@ -53,29 +54,11 @@
         <span class="level-num" id="levelNum"></span>
       </div>
       <textarea id="descInput" class="form__desc" rows="2" placeholder="descripción (opcional)…"></textarea>
-      <button class="form__add" id="addBtn" type="button">agregar a la nube</button>
+      <div class="form__actions">
+        <button class="form__add" id="addBtn" type="button">agregar a la nube</button>
+        <button class="form__delete" id="formDelete" type="button">borrar</button>
+      </div>
       <div class="form__hint">enter para agregar · esc para salir</div>
-    </div>
-  </div>
-
-  <div class="modal-mask" id="modalMask">
-    <div class="modal-card" id="modalCard">
-      <div class="modal-face modal-face--front">
-        <div class="modal-word" id="modalWord"></div>
-        <div class="modal-level">
-          <div class="modal-dots" id="modalDots"></div>
-          <span id="modalLevel"></span>
-        </div>
-        <div class="modal-actions">
-          <button class="modal-flip" id="modalFlip" type="button">leer descripción</button>
-          <button class="modal-edit" id="modalEdit" type="button">editar</button>
-          <button class="modal-del" id="modalDel" type="button">borrar</button>
-        </div>
-      </div>
-      <div class="modal-face modal-face--back">
-        <div class="modal-desc" id="modalDesc"></div>
-        <button class="modal-flip" id="modalFlipBack" type="button">volver</button>
-      </div>
     </div>
   </div>
 
