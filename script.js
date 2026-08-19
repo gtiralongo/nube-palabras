@@ -2,8 +2,7 @@
 
 const $ = (id) => document.getElementById(id);
 
-const KEY = 'nube-palabras-v2';
-const KEY_OLD = 'nube-palabras-v1';
+const API = 'api/palabras';
 const DENSITY_MAX = 15;
 const POINTER_RADIUS = 120;
 const LEVEL_CHANGE_INTERVAL = 8000;
@@ -80,31 +79,24 @@ function opacityFor(weight) {
 /* ---------- persistencia ---------- */
 
 function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(words)); } catch (e) {}
+  fetch(API, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(words.map((w) => ({
+      word: w.word,
+      level: w.level,
+      desc: w.desc
+    })))
+  }).catch(() => {});
 }
 
-function load() {
+async function load() {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      const data = JSON.parse(raw);
+    const res = await fetch(API);
+    if (res.ok) {
+      const data = await res.json();
       if (Array.isArray(data) && data.length) return data;
     }
-    const oldRaw = localStorage.getItem(KEY_OLD);
-    if (oldRaw) {
-      const data = JSON.parse(oldRaw);
-      if (Array.isArray(data) && data.length) return data;
-    }
-  } catch (e) {}
-  return null;
-}
-
-async function loadFromJSON() {
-  try {
-    const res = await fetch('palabras.json');
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (Array.isArray(data) && data.length) return data;
   } catch (e) {}
   return null;
 }
@@ -698,8 +690,7 @@ window.addEventListener('keydown', (e) => {
 async function init() {
   paintDots();
 
-  let data = load();
-  if (!data) data = await loadFromJSON();
+  let data = await load();
   if (!data) data = SEEDS.map((s) => ({ ...s }));
 
   for (const s of data) {
@@ -715,8 +706,8 @@ async function init() {
 
   resize();
   save();
-  console.log('nube-palabras: palabras visibles =', words.filter((w) => !w.hidden).length);
-  console.log('nube-palabras: primera palabra =', JSON.stringify(words[0]));
+  console.log('nube-de-benjamin: palabras visibles =', words.filter((w) => !w.hidden).length);
+  console.log('nube-de-benjamin: primera palabra =', JSON.stringify(words[0]));
   requestAnimationFrame(loop);
 }
 
