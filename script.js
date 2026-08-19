@@ -99,6 +99,16 @@ function load() {
   return null;
 }
 
+async function loadFromJSON() {
+  try {
+    const res = await fetch('palabras.json');
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) return data;
+  } catch (e) {}
+  return null;
+}
+
 /* ---------- motor de palabras ---------- */
 
 function visibleWords() {
@@ -685,10 +695,11 @@ window.addEventListener('keydown', (e) => {
 
 /* ---------- inicio ---------- */
 
-function init() {
+async function init() {
   paintDots();
 
   let data = load();
+  if (!data) data = await loadFromJSON();
   if (!data) data = SEEDS.map((s) => ({ ...s }));
 
   for (const s of data) {
