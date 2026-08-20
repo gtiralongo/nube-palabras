@@ -84,6 +84,17 @@ function save() {
   }
 }
 
+function waitForFirebase(timeout = 5000) {
+  return new Promise((resolve) => {
+    if (window.firebaseLoad) { resolve(true); return; }
+    const start = Date.now();
+    const check = setInterval(() => {
+      if (window.firebaseLoad) { clearInterval(check); resolve(true); }
+      else if (Date.now() - start > timeout) { clearInterval(check); resolve(false); }
+    }, 50);
+  });
+}
+
 async function load() {
   if (window.firebaseLoad) {
     return await window.firebaseLoad();
@@ -731,6 +742,8 @@ window.addEventListener('keydown', (e) => {
 
 async function init() {
   paintDots();
+
+  await waitForFirebase();
 
   let data = await load();
   if (!data) data = SEEDS.map((s) => ({ ...s }));
