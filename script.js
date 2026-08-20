@@ -803,7 +803,7 @@ function updateCelestial(t) {
   for (const b of celestialBodies) {
     if (!b.el) continue;
     const p = ((t / 1000 / b.speed) + b.delay) % 1;
-    const x = vw * 1.1 - p * (vw * 1.2 + b.size + 240);
+    const x = vw * 1.15 - p * (vw * 1.3 + b.size);
     const d = b.depth * mobileScale;
     const arc = -d * vh * Math.sin(p * Math.PI);
     const y = b.baseY * vh + arc;

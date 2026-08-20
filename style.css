@@ -58,7 +58,7 @@ body {
 /* ---------- celestial ---------- */
 
 .celestial {
-  position: absolute; inset: 0; z-index: 1;
+  position: absolute; inset: 0; z-index: 3;
   pointer-events: none; overflow: hidden;
 }
 
