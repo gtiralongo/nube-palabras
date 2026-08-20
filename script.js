@@ -805,5 +805,22 @@ async function init() {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.register('sw.js').then((reg) => {
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (nw) nw.addEventListener('statechange', () => {
+        if (nw.state === 'activated') location.reload();
+      });
+    });
+    if (reg.active && reg.active.scriptURL.endsWith('sw.js')) {
+      reg.update();
+    }
+  }).catch(() => {});
+}
+
+/* ---------- force clean old caches ---------- */
+if ('caches' in window) {
+  caches.keys().then((keys) => {
+    keys.filter((k) => k !== 'nube-v7').forEach((k) => caches.delete(k));
+  });
 }
