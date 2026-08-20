@@ -65,7 +65,7 @@ body {
 .moon {
   position: absolute;
   width: 60px; height: 60px;
-  top: 8%; left: 0;
+  top: 5%; left: 0;
   border-radius: 50%;
   background: radial-gradient(circle at 38% 36%, #f0e8d8, #e0d5c0 50%, #c8bba5);
   box-shadow:
@@ -76,15 +76,13 @@ body {
 }
 
 @keyframes moon-orbit {
-  0%   { transform: translate(calc(100vw + 80px), 0); }
-  10%  { transform: translate(88vw, -35px); }
-  25%  { transform: translate(68vw, 15px); }
-  35%  { transform: translate(52vw, -50px); }
-  50%  { transform: translate(36vw, 10px); }
-  60%  { transform: translate(22vw, -30px); }
-  75%  { transform: translate(10vw, 25px); }
-  88%  { transform: translate(-20px, -20px); }
-  100% { transform: translate(-140px, 0); }
+  0%   { transform: translate(calc(100vw + 80px), 0); opacity: 0; }
+  5%   { transform: translate(94vw, 10px); opacity: 1; }
+  20%  { transform: translate(72vw, 60px); }
+  50%  { transform: translate(46vw, 110px); }
+  80%  { transform: translate(20vw, 60px); }
+  95%  { transform: translate(-10px, 10px); opacity: 1; }
+  100% { transform: translate(-140px, 0); opacity: 0; }
 }
 
 .planet {
@@ -94,36 +92,36 @@ body {
 
 .planet--1 {
   width: 22px; height: 22px;
-  top: 32%;
+  top: 22%;
   background: radial-gradient(circle at 35% 35%, #6a8fb5, #4a6fa5 60%, #3a5580);
   box-shadow: 0 0 14px 3px rgba(74, 111, 165, .15);
-  animation: orbit-1 65s linear infinite;
+  animation: orbit-1 65s ease-in-out infinite;
 }
 
 .planet--2 {
   width: 14px; height: 14px;
-  top: 58%;
+  top: 38%;
   background: radial-gradient(circle at 35% 35%, #d48a6a, #b5654a 60%, #8a4a35);
   box-shadow: 0 0 10px 2px rgba(181, 101, 74, .15);
-  animation: orbit-2 50s linear infinite;
+  animation: orbit-2 50s ease-in-out infinite;
   animation-delay: -20s;
 }
 
 .planet--3 {
   width: 10px; height: 10px;
-  top: 20%;
+  top: 12%;
   background: radial-gradient(circle at 35% 35%, #e8c86a, #d4a843 60%, #a88530);
   box-shadow: 0 0 8px 2px rgba(212, 168, 67, .15);
-  animation: orbit-3 80s linear infinite;
+  animation: orbit-3 80s ease-in-out infinite;
   animation-delay: -35s;
 }
 
 .planet--4 {
   width: 30px; height: 30px;
-  top: 72%;
+  top: 50%;
   background: radial-gradient(circle at 38% 34%, #ddd0b8, #c9b89a 55%, #a89570);
   box-shadow: 0 0 16px 4px rgba(201, 184, 154, .12);
-  animation: orbit-4 70s linear infinite;
+  animation: orbit-4 70s ease-in-out infinite;
   animation-delay: -45s;
 }
 
@@ -138,45 +136,43 @@ body {
 }
 
 @keyframes orbit-1 {
-  0%   { transform: translate(calc(100vw + 120px), 0); }
-  12%  { transform: translate(84vw, -40px); }
-  28%  { transform: translate(62vw, 25px); }
-  42%  { transform: translate(44vw, -55px); }
-  58%  { transform: translate(28vw, 15px); }
-  72%  { transform: translate(14vw, -35px); }
-  88%  { transform: translate(0vw, 20px); }
-  100% { transform: translate(-120px, -10px); }
+  0%   { transform: translate(calc(100vw + 120px), 0); opacity: 0; }
+  5%   { transform: translate(92vw, 12px); opacity: 1; }
+  25%  { transform: translate(68vw, 52px); }
+  50%  { transform: translate(46vw, 80px); }
+  75%  { transform: translate(24vw, 52px); }
+  95%  { transform: translate(0, 12px); opacity: 1; }
+  100% { transform: translate(-120px, 0); opacity: 0; }
 }
 
 @keyframes orbit-2 {
-  0%   { transform: translate(calc(100vw + 120px), 0); }
-  15%  { transform: translate(80vw, 35px); }
-  30%  { transform: translate(58vw, -45px); }
-  50%  { transform: translate(36vw, 20px); }
-  65%  { transform: translate(20vw, -30px); }
-  82%  { transform: translate(6vw, 40px); }
-  100% { transform: translate(-120px, -5px); }
+  0%   { transform: translate(calc(100vw + 120px), 0); opacity: 0; }
+  5%   { transform: translate(90vw, 10px); opacity: 1; }
+  25%  { transform: translate(66vw, 38px); }
+  50%  { transform: translate(46vw, 60px); }
+  75%  { transform: translate(24vw, 38px); }
+  95%  { transform: translate(0, 10px); opacity: 1; }
+  100% { transform: translate(-120px, 0); opacity: 0; }
 }
 
 @keyframes orbit-3 {
-  0%   { transform: translate(calc(100vw + 120px), 0); }
-  18%  { transform: translate(76vw, -50px); }
-  35%  { transform: translate(50vw, 30px); }
-  52%  { transform: translate(30vw, -40px); }
-  70%  { transform: translate(14vw, 45px); }
-  88%  { transform: translate(0vw, -20px); }
-  100% { transform: translate(-120px, 10px); }
+  0%   { transform: translate(calc(100vw + 120px), 0); opacity: 0; }
+  5%   { transform: translate(92vw, 14px); opacity: 1; }
+  25%  { transform: translate(68vw, 58px); }
+  50%  { transform: translate(46vw, 90px); }
+  75%  { transform: translate(24vw, 58px); }
+  95%  { transform: translate(0, 14px); opacity: 1; }
+  100% { transform: translate(-120px, 0); opacity: 0; }
 }
 
 @keyframes orbit-4 {
-  0%   { transform: translate(calc(100vw + 120px), 0); }
-  10%  { transform: translate(88vw, -30px); }
-  25%  { transform: translate(66vw, 50px); }
-  40%  { transform: translate(46vw, -45px); }
-  55%  { transform: translate(30vw, 35px); }
-  70%  { transform: translate(14vw, -55px); }
-  85%  { transform: translate(2vw, 15px); }
-  100% { transform: translate(-120px, -10px); }
+  0%   { transform: translate(calc(100vw + 120px), 0); opacity: 0; }
+  5%   { transform: translate(90vw, 10px); opacity: 1; }
+  25%  { transform: translate(66vw, 42px); }
+  50%  { transform: translate(46vw, 70px); }
+  75%  { transform: translate(24vw, 42px); }
+  95%  { transform: translate(0, 10px); opacity: 1; }
+  100% { transform: translate(-120px, 0); opacity: 0; }
 }
 
 .vignette {
