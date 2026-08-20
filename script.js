@@ -2,7 +2,6 @@
 
 const $ = (id) => document.getElementById(id);
 
-const API = 'api/palabras';
 const DENSITY_MAX = 15;
 const POINTER_RADIUS = 120;
 const LEVEL_CHANGE_INTERVAL = 8000;
@@ -79,25 +78,15 @@ function opacityFor(weight) {
 /* ---------- persistencia ---------- */
 
 function save() {
-  fetch(API, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(words.map((w) => ({
-      word: w.word,
-      level: w.level,
-      desc: w.desc
-    })))
-  }).catch(() => {});
+  if (window.firebaseSave) {
+    window.firebaseSave(words).catch(() => {});
+  }
 }
 
 async function load() {
-  try {
-    const res = await fetch(API);
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length) return data;
-    }
-  } catch (e) {}
+  if (window.firebaseLoad) {
+    return await window.firebaseLoad();
+  }
   return null;
 }
 
