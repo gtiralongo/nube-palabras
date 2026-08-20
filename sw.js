@@ -1,4 +1,4 @@
-const CACHE = 'nube-v6';
+const CACHE = 'nube-v7';
 const ASSETS = [
   '.',
   'index.html',
@@ -24,6 +24,8 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  const url = new URL(e.request.url);
+  if (url.origin !== location.origin) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
