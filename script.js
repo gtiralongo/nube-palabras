@@ -752,8 +752,9 @@ const celestialBodies = [
 
 function initCelestial() {
   const container = document.querySelector('.celestial');
+  if (!container) return;
   const els = container.querySelectorAll('.moon, .planet');
-  els.forEach((el, i) => { celestialBodies[i].el = el; });
+  els.forEach((el, i) => { if (celestialBodies[i]) celestialBodies[i].el = el; });
 }
 
 function updateCelestial(t) {
