@@ -72,12 +72,16 @@ body {
     0 0 20px 4px rgba(240, 230, 210, .18),
     0 0 60px 12px rgba(240, 230, 210, .08),
     0 0 120px 30px rgba(240, 230, 210, .04);
-  animation: moon-float 8s ease-in-out infinite;
+  animation: moon-orbit 180s ease-in-out infinite;
 }
 
-@keyframes moon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+@keyframes moon-orbit {
+  0%   { transform: translate(calc(100vw - 80px), 0); }
+  20%  { transform: translate(72vw, -20px); }
+  40%  { transform: translate(48vw, 10px); }
+  60%  { transform: translate(28vw, -15px); }
+  80%  { transform: translate(8vw, 8px); }
+  100% { transform: translate(-100px, -5px); }
 }
 
 .planet {
