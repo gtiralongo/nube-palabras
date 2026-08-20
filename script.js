@@ -722,6 +722,45 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+/* ---------- pull to refresh (mobile) ---------- */
+
+(function pullToRefresh() {
+  let startY = 0;
+  let pulling = false;
+  const threshold = 120;
+  const indicator = document.createElement('div');
+  indicator.style.cssText = 'position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-40px);z-index:99;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;transition:transform .2s,opacity .2s;opacity:0;pointer-events:none;backdrop-filter:blur(8px);';
+  indicator.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7-7 7 7"/></svg>';
+  document.body.appendChild(indicator);
+
+  document.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      pulling = true;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 10 && window.scrollY === 0) {
+      const progress = Math.min(dy / threshold, 1);
+      indicator.style.opacity = progress;
+      indicator.style.transform = 'translateX(-50%) translateY(' + (dy * 0.4 - 40) + 'px) rotate(' + (progress * 180) + 'deg)';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+    if (parseFloat(indicator.style.opacity) >= 1) {
+      location.reload();
+    }
+    indicator.style.opacity = 0;
+    indicator.style.transform = 'translateX(-50%) translateY(-40px)';
+  });
+})();
+
 /* ---------- fondo de estrellas ---------- */
 
 (function makeStars() {
@@ -760,11 +799,13 @@ function initCelestial() {
 function updateCelestial(t) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  const mobileScale = vw < 640 ? 0.65 : 1;
   for (const b of celestialBodies) {
     if (!b.el) continue;
     const p = ((t / 1000 / b.speed) + b.delay) % 1;
     const x = vw * 1.1 - p * (vw * 1.2 + b.size + 240);
-    const arc = b.depth * vh * 4 * Math.pow(p - 0.5, 2) - b.depth * vh;
+    const d = b.depth * mobileScale;
+    const arc = d * vh * 4 * Math.pow(p - 0.5, 2) - d * vh;
     const y = b.baseY * vh + arc;
     const fadeIn = Math.min(p * 20, 1);
     const fadeOut = Math.min((1 - p) * 20, 1);
