@@ -192,15 +192,9 @@ body {
   color: rgba(255, 255, 255, .4);
   pointer-events: none;
 }
-.header-tag .dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: linear-gradient(135deg, #7ee8fa, #c471ed);
-  box-shadow: 0 0 10px rgba(150, 170, 255, .8);
-  animation: pulse-dot 2.4s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .4; transform: scale(.7); }
+.header-tag .header-tag__icon {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(150, 170, 255, .6));
 }
 
 /* ---------- panel de info ---------- */
