@@ -83,7 +83,6 @@ body {
 .planet {
   position: absolute;
   border-radius: 50%;
-  animation: cross-sky linear infinite;
 }
 
 .planet--1 {
@@ -91,8 +90,7 @@ body {
   top: 32%;
   background: radial-gradient(circle at 35% 35%, #6a8fb5, #4a6fa5 60%, #3a5580);
   box-shadow: 0 0 14px 3px rgba(74, 111, 165, .15);
-  animation-duration: 65s;
-  animation-delay: 0s;
+  animation: orbit-1 65s linear infinite;
 }
 
 .planet--2 {
@@ -100,7 +98,7 @@ body {
   top: 58%;
   background: radial-gradient(circle at 35% 35%, #d48a6a, #b5654a 60%, #8a4a35);
   box-shadow: 0 0 10px 2px rgba(181, 101, 74, .15);
-  animation-duration: 50s;
+  animation: orbit-2 50s linear infinite;
   animation-delay: -20s;
 }
 
@@ -109,7 +107,7 @@ body {
   top: 20%;
   background: radial-gradient(circle at 35% 35%, #e8c86a, #d4a843 60%, #a88530);
   box-shadow: 0 0 8px 2px rgba(212, 168, 67, .15);
-  animation-duration: 80s;
+  animation: orbit-3 80s linear infinite;
   animation-delay: -35s;
 }
 
@@ -118,7 +116,7 @@ body {
   top: 72%;
   background: radial-gradient(circle at 38% 34%, #ddd0b8, #c9b89a 55%, #a89570);
   box-shadow: 0 0 16px 4px rgba(201, 184, 154, .12);
-  animation-duration: 70s;
+  animation: orbit-4 70s linear infinite;
   animation-delay: -45s;
 }
 
@@ -132,9 +130,36 @@ body {
   border-radius: 50%;
 }
 
-@keyframes cross-sky {
-  0% { transform: translateX(-120px); }
-  100% { transform: translateX(calc(100vw + 120px)); }
+@keyframes orbit-1 {
+  0%   { transform: translate(calc(100vw + 120px), 0); }
+  25%  { transform: translate(75vw, -18px); }
+  50%  { transform: translate(50vw, 10px); }
+  75%  { transform: translate(25vw, -12px); }
+  100% { transform: translate(-120px, 0); }
+}
+
+@keyframes orbit-2 {
+  0%   { transform: translate(calc(100vw + 120px), 0); }
+  20%  { transform: translate(80vw, 22px); }
+  50%  { transform: translate(50vw, -8px); }
+  80%  { transform: translate(20vw, 16px); }
+  100% { transform: translate(-120px, 0); }
+}
+
+@keyframes orbit-3 {
+  0%   { transform: translate(calc(100vw + 120px), 0); }
+  30%  { transform: translate(68vw, -25px); }
+  60%  { transform: translate(38vw, 14px); }
+  100% { transform: translate(-120px, -10px); }
+}
+
+@keyframes orbit-4 {
+  0%   { transform: translate(calc(100vw + 120px), 0); }
+  15%  { transform: translate(85vw, -14px); }
+  40%  { transform: translate(58vw, 20px); }
+  65%  { transform: translate(32vw, -16px); }
+  85%  { transform: translate(12vw, 8px); }
+  100% { transform: translate(-120px, 0); }
 }
 
 .vignette {
