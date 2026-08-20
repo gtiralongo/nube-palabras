@@ -1,9 +1,9 @@
-const CACHE = 'nube-v8';
+const CACHE = 'nube-v9';
 const ASSETS = [
   '.',
   'index.html',
-  'style.css',
-  'script.js',
+  'style.css?v=9',
+  'script.js?v=7',
   'firebase.js',
   'icon-192.svg',
   'icon-512.svg'

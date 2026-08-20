@@ -799,16 +799,16 @@ function initCelestial() {
 function updateCelestial(t) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  const mobileScale = vw < 640 ? 0.65 : 1;
+  const mobileScale = vw < 640 ? 0.55 : 1;
   for (const b of celestialBodies) {
     if (!b.el) continue;
     const p = ((t / 1000 / b.speed) + b.delay) % 1;
     const x = vw * 1.1 - p * (vw * 1.2 + b.size + 240);
     const d = b.depth * mobileScale;
-    const arc = d * vh * 4 * Math.pow(p - 0.5, 2) - d * vh;
+    const arc = -d * vh * Math.sin(p * Math.PI);
     const y = b.baseY * vh + arc;
-    const fadeIn = Math.min(p * 20, 1);
-    const fadeOut = Math.min((1 - p) * 20, 1);
+    const fadeIn = Math.min(p * 15, 1);
+    const fadeOut = Math.min((1 - p) * 15, 1);
     const opacity = Math.min(fadeIn, fadeOut);
     b.el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
     b.el.style.opacity = opacity;
@@ -847,22 +847,15 @@ async function init() {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then((reg) => {
+  navigator.serviceWorker.register('sw.js?v=9').then((reg) => {
     reg.addEventListener('updatefound', () => {
       const nw = reg.installing;
       if (nw) nw.addEventListener('statechange', () => {
         if (nw.state === 'activated') location.reload();
       });
     });
-    if (reg.active && reg.active.scriptURL.endsWith('sw.js')) {
+    if (reg.active && reg.active.scriptURL.includes('sw.js')) {
       reg.update();
     }
   }).catch(() => {});
-}
-
-/* ---------- force clean old caches ---------- */
-if ('caches' in window) {
-  caches.keys().then((keys) => {
-    keys.filter((k) => k !== 'nube-v7').forEach((k) => caches.delete(k));
-  });
 }
