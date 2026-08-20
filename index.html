@@ -64,7 +64,19 @@
 
   <div class="toast" id="toast"></div>
 
+  <div class="pin-mask" id="pinMask">
+    <div class="pin-modal">
+      <div class="pin-modal__title">ingresá el PIN</div>
+      <input type="password" id="pinInput" class="pin-modal__input" maxlength="6" inputmode="numeric" autocomplete="off" placeholder="······">
+      <div class="pin-modal__error" id="pinError">PIN incorrecto</div>
+      <div class="pin-modal__actions">
+        <button class="pin-modal__btn pin-modal__btn--cancel" id="pinCancel" type="button">cancelar</button>
+        <button class="pin-modal__btn pin-modal__btn--ok" id="pinOk" type="button">ok</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="firebase.js"></script>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

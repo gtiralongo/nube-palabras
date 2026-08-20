@@ -5,6 +5,7 @@ const $ = (id) => document.getElementById(id);
 const DENSITY_MAX = 15;
 const POINTER_RADIUS = 120;
 const LEVEL_CHANGE_INTERVAL = 8000;
+const ADMIN_PIN = '010322';
 
 const SEEDS = [
   { word: 'silencio', level: 5, desc: 'el hueco donde nacen las palabras.' },
@@ -88,6 +89,54 @@ async function load() {
     return await window.firebaseLoad();
   }
   return null;
+}
+
+/* ---------- PIN ---------- */
+
+function isAdmin() {
+  return sessionStorage.getItem('nube-admin') === '1';
+}
+
+function requirePin() {
+  return new Promise((resolve) => {
+    if (isAdmin()) { resolve(true); return; }
+    const mask = $('pinMask');
+    const input = $('pinInput');
+    const error = $('pinError');
+    input.value = '';
+    error.classList.remove('show');
+    mask.classList.add('open');
+    setTimeout(() => input.focus(), 100);
+
+    function close(result) {
+      mask.classList.remove('open');
+      cleanup();
+      resolve(result);
+    }
+    function onOk() {
+      if (input.value === ADMIN_PIN) {
+        sessionStorage.setItem('nube-admin', '1');
+        close(true);
+      } else {
+        error.classList.add('show');
+        input.value = '';
+        input.focus();
+      }
+    }
+    function onCancel() { close(false); }
+    function onKey(e) {
+      if (e.key === 'Enter') onOk();
+      if (e.key === 'Escape') onCancel();
+    }
+    function cleanup() {
+      $('pinOk').removeEventListener('click', onOk);
+      $('pinCancel').removeEventListener('click', onCancel);
+      input.removeEventListener('keydown', onKey);
+    }
+    $('pinOk').addEventListener('click', onOk);
+    $('pinCancel').addEventListener('click', onCancel);
+    input.addEventListener('keydown', onKey);
+  });
 }
 
 /* ---------- motor de palabras ---------- */
@@ -620,16 +669,20 @@ $('descInput').addEventListener('keydown', (e) => {
 $('addBtn').addEventListener('click', submitWord);
 $('diceBtn').addEventListener('click', () => setLevel(randomLevel()));
 
-$('infoEdit').addEventListener('click', () => {
+$('infoEdit').addEventListener('click', async () => {
   if (selectedWord) {
+    const ok = await requirePin();
+    if (!ok) return;
     const w = selectedWord;
     deselectWord();
     openForm(w);
   }
 });
 
-$('formDelete').addEventListener('click', () => {
+$('formDelete').addEventListener('click', async () => {
   if (editingId) {
+    const ok = await requirePin();
+    if (!ok) return;
     const w = words.find((x) => x.id === editingId);
     if (w) {
       closeForm();
