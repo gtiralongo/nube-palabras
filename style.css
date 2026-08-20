@@ -65,23 +65,26 @@ body {
 .moon {
   position: absolute;
   width: 60px; height: 60px;
-  top: 8%; right: 14%;
+  top: 8%; left: 0;
   border-radius: 50%;
   background: radial-gradient(circle at 38% 36%, #f0e8d8, #e0d5c0 50%, #c8bba5);
   box-shadow:
     0 0 20px 4px rgba(240, 230, 210, .18),
     0 0 60px 12px rgba(240, 230, 210, .08),
     0 0 120px 30px rgba(240, 230, 210, .04);
-  animation: moon-orbit 180s ease-in-out infinite;
+  animation: moon-orbit 140s ease-in-out infinite;
 }
 
 @keyframes moon-orbit {
-  0%   { transform: translate(calc(100vw - 80px), 0); }
-  20%  { transform: translate(72vw, -20px); }
-  40%  { transform: translate(48vw, 10px); }
-  60%  { transform: translate(28vw, -15px); }
-  80%  { transform: translate(8vw, 8px); }
-  100% { transform: translate(-100px, -5px); }
+  0%   { transform: translate(calc(100vw + 80px), 0); }
+  10%  { transform: translate(88vw, -35px); }
+  25%  { transform: translate(68vw, 15px); }
+  35%  { transform: translate(52vw, -50px); }
+  50%  { transform: translate(36vw, 10px); }
+  60%  { transform: translate(22vw, -30px); }
+  75%  { transform: translate(10vw, 25px); }
+  88%  { transform: translate(-20px, -20px); }
+  100% { transform: translate(-140px, 0); }
 }
 
 .planet {
@@ -136,34 +139,44 @@ body {
 
 @keyframes orbit-1 {
   0%   { transform: translate(calc(100vw + 120px), 0); }
-  25%  { transform: translate(75vw, -18px); }
-  50%  { transform: translate(50vw, 10px); }
-  75%  { transform: translate(25vw, -12px); }
-  100% { transform: translate(-120px, 0); }
+  12%  { transform: translate(84vw, -40px); }
+  28%  { transform: translate(62vw, 25px); }
+  42%  { transform: translate(44vw, -55px); }
+  58%  { transform: translate(28vw, 15px); }
+  72%  { transform: translate(14vw, -35px); }
+  88%  { transform: translate(0vw, 20px); }
+  100% { transform: translate(-120px, -10px); }
 }
 
 @keyframes orbit-2 {
   0%   { transform: translate(calc(100vw + 120px), 0); }
-  20%  { transform: translate(80vw, 22px); }
-  50%  { transform: translate(50vw, -8px); }
-  80%  { transform: translate(20vw, 16px); }
-  100% { transform: translate(-120px, 0); }
+  15%  { transform: translate(80vw, 35px); }
+  30%  { transform: translate(58vw, -45px); }
+  50%  { transform: translate(36vw, 20px); }
+  65%  { transform: translate(20vw, -30px); }
+  82%  { transform: translate(6vw, 40px); }
+  100% { transform: translate(-120px, -5px); }
 }
 
 @keyframes orbit-3 {
   0%   { transform: translate(calc(100vw + 120px), 0); }
-  30%  { transform: translate(68vw, -25px); }
-  60%  { transform: translate(38vw, 14px); }
-  100% { transform: translate(-120px, -10px); }
+  18%  { transform: translate(76vw, -50px); }
+  35%  { transform: translate(50vw, 30px); }
+  52%  { transform: translate(30vw, -40px); }
+  70%  { transform: translate(14vw, 45px); }
+  88%  { transform: translate(0vw, -20px); }
+  100% { transform: translate(-120px, 10px); }
 }
 
 @keyframes orbit-4 {
   0%   { transform: translate(calc(100vw + 120px), 0); }
-  15%  { transform: translate(85vw, -14px); }
-  40%  { transform: translate(58vw, 20px); }
-  65%  { transform: translate(32vw, -16px); }
-  85%  { transform: translate(12vw, 8px); }
-  100% { transform: translate(-120px, 0); }
+  10%  { transform: translate(88vw, -30px); }
+  25%  { transform: translate(66vw, 50px); }
+  40%  { transform: translate(46vw, -45px); }
+  55%  { transform: translate(30vw, 35px); }
+  70%  { transform: translate(14vw, -55px); }
+  85%  { transform: translate(2vw, 15px); }
+  100% { transform: translate(-120px, -10px); }
 }
 
 .vignette {
