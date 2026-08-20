@@ -1,4 +1,4 @@
-const CACHE = 'nube-v5';
+const CACHE = 'nube-v6';
 const ASSETS = [
   '.',
   'index.html',

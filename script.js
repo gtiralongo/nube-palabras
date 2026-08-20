@@ -402,6 +402,8 @@ function loop(t) {
     autoDriftLevel();
   }
 
+  updateCelestial(t);
+
   ctx.clearRect(0, 0, width, height);
   activeWord = null;
 
@@ -738,10 +740,44 @@ window.addEventListener('keydown', (e) => {
   }
 })();
 
+/* ---------- celestial ---------- */
+
+const celestialBodies = [
+  { el: null, speed: 140, delay: 0,   baseY: 0.42, depth: 0.40, size: 60 },
+  { el: null, speed: 65,  delay: 0.15, baseY: 0.62, depth: 0.35, size: 22 },
+  { el: null, speed: 50,  delay: 0.45, baseY: 0.52, depth: 0.30, size: 14 },
+  { el: null, speed: 80,  delay: 0.70, baseY: 0.72, depth: 0.38, size: 10 },
+  { el: null, speed: 70,  delay: 0.30, baseY: 0.58, depth: 0.33, size: 30 }
+];
+
+function initCelestial() {
+  const container = document.querySelector('.celestial');
+  const els = container.querySelectorAll('.moon, .planet');
+  els.forEach((el, i) => { celestialBodies[i].el = el; });
+}
+
+function updateCelestial(t) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  for (const b of celestialBodies) {
+    if (!b.el) continue;
+    const p = ((t / 1000 / b.speed) + b.delay) % 1;
+    const x = vw * 1.1 - p * (vw * 1.2 + b.size + 240);
+    const arc = b.depth * vh * 4 * Math.pow(p - 0.5, 2) - b.depth * vh;
+    const y = b.baseY * vh + arc;
+    const fadeIn = Math.min(p * 20, 1);
+    const fadeOut = Math.min((1 - p) * 20, 1);
+    const opacity = Math.min(fadeIn, fadeOut);
+    b.el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    b.el.style.opacity = opacity;
+  }
+}
+
 /* ---------- inicio ---------- */
 
 async function init() {
   paintDots();
+  initCelestial();
 
   await waitForFirebase();
 
