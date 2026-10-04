@@ -813,6 +813,7 @@ async function init() {
     console.warn('nube-de-benjamin: no se pudo cargar datos desde Firebase, iniciando vacío');
     data = [];
   }
+  console.log('nube-de-benjamin: data cargada desde Firebase', data.length, data);
 
   for (const s of data) {
     words.push({
@@ -834,7 +835,7 @@ async function init() {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=9').then((reg) => {
+  navigator.serviceWorker.register('sw.js?v=10').then((reg) => {
     reg.addEventListener('updatefound', () => {
       const nw = reg.installing;
       if (nw) nw.addEventListener('statechange', () => {
