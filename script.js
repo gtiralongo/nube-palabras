@@ -7,21 +7,6 @@ const POINTER_RADIUS = 120;
 const LEVEL_CHANGE_INTERVAL = 8000;
 const ADMIN_PIN = '010322';
 
-const SEEDS = [
-  { word: 'silencio', level: 5, desc: 'el hueco donde nacen las palabras.' },
-  { word: 'luz', level: 4, desc: 'la primera que aparece cuando todo se apaga.' },
-  { word: 'mar', level: 3, desc: 'el ruido de fondo donde flotan las ideas.' },
-  { word: 'viento', level: 2, desc: 'lo que mueve las hojas sin pedir permiso.' },
-  { word: 'arena', level: 1, desc: 'lo que queda cuando se va la ola.' },
-  { word: 'estrellas', level: 5, desc: 'puntos que ordenan la noche.' },
-  { word: 'nube', level: 3, desc: 'donde viven los pensamientos prestados.' },
-  { word: 'raíz', level: 2, desc: 'el origen que nunca se ve.' },
-  { word: 'hoja', level: 1, desc: 'una página que cae cada otoño.' },
-  { word: 'pozo', level: 2, desc: 'profundo, frío y siempre oscuro.' },
-  { word: 'caminos', level: 4, desc: 'todas las formas de llegar al mismo lugar.' },
-  { word: 'eco', level: 1, desc: 'una palabra repetida por la distancia.' }
-];
-
 const canvas = $('wordCloud');
 const ctx = canvas.getContext('2d');
 
@@ -824,7 +809,10 @@ async function init() {
   await waitForFirebase();
 
   let data = await load();
-  if (!data) data = SEEDS.map((s) => ({ ...s }));
+  if (!data || !Array.isArray(data)) {
+    console.warn('nube-de-benjamin: no se pudo cargar datos desde Firebase, iniciando vacío');
+    data = [];
+  }
 
   for (const s of data) {
     words.push({
@@ -838,7 +826,6 @@ async function init() {
   }
 
   resize();
-  save();
   console.log('nube-de-benjamin: palabras visibles =', words.filter((w) => !w.hidden).length);
   console.log('nube-de-benjamin: primera palabra =', JSON.stringify(words[0]));
   requestAnimationFrame(loop);
