@@ -829,6 +829,7 @@ async function init() {
   resize();
   console.log('nube-de-benjamin: palabras visibles =', words.filter((w) => !w.hidden).length);
   console.log('nube-de-benjamin: primera palabra =', JSON.stringify(words[0]));
+  toast(`palabras cargadas: ${words.length}`);
   requestAnimationFrame(loop);
 }
 
