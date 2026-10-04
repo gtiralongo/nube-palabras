@@ -812,6 +812,7 @@ async function init() {
   if (!data || !Array.isArray(data)) {
     console.warn('nube-de-benjamin: no se pudo cargar datos desde Firebase, iniciando vacío');
     data = [];
+    toast('no se pudo cargar desde Firebase');
   }
   console.log('nube-de-benjamin: data cargada desde Firebase', data.length, data);
 
