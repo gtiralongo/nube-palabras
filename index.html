@@ -90,14 +90,5 @@
 
   <script type="module" src="firebase.js"></script>
   <script src="script.js?v=8"></script>
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>
-    eruda.init({
-      tool: ['console','elements','network'],
-      alwaysShowToolbar: true
-    });
-    // Ensure eruda is on top
-    setTimeout(()=>{ const el=document.querySelector('.eruda-container'); if(el){ el.style.zIndex='999999'; } },500);
-  </script>
 </body>
 </html>

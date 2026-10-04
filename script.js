@@ -25,7 +25,7 @@ let activeWord = null;
 let selectedWord = null;
 
 let mqMobile = window.matchMedia('(max-width: 640px)');
-let densityExpanded = false;
+let densityExpanded = true;
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const debounce = (fn, ms) => {

@@ -201,11 +201,11 @@ body {
   display: flex; align-items: center; justify-content: center;
   border-radius: 50%;
   cursor: pointer;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(255, 255, 255, .95);
   font-size: 20px; font-weight: 300;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .02);
-  opacity: .25;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(255, 255, 255, .08);
+  opacity: .95;
   transition: opacity .4s, transform .4s, background .4s, box-shadow .4s, color .4s;
 }
 .hotspot:hover {
@@ -219,7 +219,7 @@ body {
 /* ---------- chip de densidad ---------- */
 
 .density-chip {
-  display: none;
+  display: none !important;
   position: fixed; top: 18px; right: 18px; z-index: 15;
   padding: 10px 18px;
   border-radius: 999px;
